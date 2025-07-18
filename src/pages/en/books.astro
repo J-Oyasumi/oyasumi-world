@@ -1,0 +1,55 @@
+---
+import HeadCommon from "../../components/HeadCommon.astro";
+import HeadSEO from "../../components/HeadSEO.astro";
+import Card from "../../components/Card.astro";
+import Header from "../../components/Header/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { SITE } from "@/config";
+import { sortPosts } from "@/util";
+import { getLocalizedContent, detectLanguage } from '../../utils/i18n.ts';
+
+const posts = Object.values(import.meta.glob('./posts/books/*.md', { eager: true }));
+const booksPosts = sortPosts(posts);
+const currentLanguage = detectLanguage(Astro.url.pathname);
+
+const localizedPosts = booksPosts.map(post => ({
+  ...post,
+  frontmatter: {
+    ...post.frontmatter,
+    ...getLocalizedContent(post.frontmatter, currentLanguage)
+  }
+}));
+---
+
+<html lang="en">
+  <head>
+    <HeadCommon />
+    <HeadSEO pageURL={`${SITE.homePage}/en/books`} content={{}} />
+    <title>Books - {SITE.title}</title>
+  </head>
+
+  <body>
+    <Header />
+    <div
+      class="mx-auto mt-4 mb-12 xl:max-w-7xl w-full lg:max-w-5xl md:max-w-2xl max-w-xl md:box-border box-content md:px-0 sm:px-3 px-4"
+    >
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-200 mb-4">Books</h1>
+        <p class="text-gray-600 dark:text-gray-400">Reading notes and book insights</p>
+      </div>
+      
+      <div
+        class="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 mx-0 md:-mr-5 mr-0 overflow-hidden"
+      >
+        {localizedPosts.length > 0 ? (
+          localizedPosts.map((p) => <Card post={p} />)
+        ) : (
+          <div class="col-span-full text-center py-12">
+            <p class="text-gray-500 dark:text-gray-400">No book articles yet</p>
+          </div>
+        )}
+      </div>
+    </div>
+    <Footer />
+  </body>
+</html>

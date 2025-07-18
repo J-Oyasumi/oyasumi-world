@@ -1,0 +1,311 @@
+---
+import "../styles/heti.min.css";
+import HeadCommon from "../components/HeadCommon.astro";
+import HeadSEO from "../components/HeadSEO.astro";
+import Footer from "../components/Footer.astro";
+import AstroLogo from "../components/Header/AstroLogo.astro";
+import LeftSidebar from "../components/LeftSidebar.astro";
+import LanguageSwitcher from "../components/LanguageSwitcher.astro";
+import Search from "../components/Header/Search.astro";
+import { SITE } from "@/config";
+import { sortPosts } from "@/util";
+import { detectLanguage, t } from '@/utils/i18n';
+
+export interface Props {
+  frontmatter: {
+    title: string;
+    date: string;
+    image: string;
+    description: string;
+    url: string;
+    socialImage: string;
+  };
+  title: string;
+  lang?: 'zh' | 'en';
+}
+
+const pageUrl = new URL(Astro.request.url);
+const currentPage = pageUrl.pathname;
+
+// 检测当前语言
+const currentLang = Astro.props.lang || detectLanguage(currentPage);
+
+// 使用 frontmatter 中的标题
+const title = Astro.props.frontmatter.title;
+
+const { date, image, description, url, socialImage } = Astro.props.frontmatter;
+const content = {
+  title,
+  image: image,
+  description,
+  socialImage,
+};
+const currentUrl = `${SITE.homePage}${currentPage}`;
+
+// 根据当前页面路径确定板块并获取同板块文章
+const getCurrentCategory = (url: string) => {
+  if (url.includes('/posts/papers/')) return 'papers';
+  if (url.includes('/posts/tech/')) return 'tech';
+  if (url.includes('/posts/movies/')) return 'movies';
+  if (url.includes('/posts/books/')) return 'books';
+  if (url.includes('/posts/misc/')) return 'misc';
+  if (url.includes('/posts/wander/')) return 'wander';
+  return '';
+};
+
+const currentCategory = getCurrentCategory(currentPage);
+let categoryPosts = [];
+
+if (currentCategory === 'papers') {
+  const posts = Object.values(import.meta.glob('../pages/posts/papers/*.md', { eager: true }));
+  categoryPosts = sortPosts(posts);
+} else if (currentCategory === 'tech') {
+  const posts = Object.values(import.meta.glob('../pages/posts/tech/*.md', { eager: true }));
+  categoryPosts = sortPosts(posts);
+} else if (currentCategory === 'movies') {
+  const posts = Object.values(import.meta.glob('../pages/posts/movies/*.md', { eager: true }));
+  categoryPosts = sortPosts(posts);
+} else if (currentCategory === 'books') {
+  const posts = Object.values(import.meta.glob('../pages/posts/books/*.md', { eager: true }));
+  categoryPosts = sortPosts(posts);
+} else if (currentCategory === 'misc') {
+  const posts = Object.values(import.meta.glob('../pages/posts/misc/*.md', { eager: true }));
+  categoryPosts = sortPosts(posts);
+} else if (currentCategory === 'wander') {
+  const posts = Object.values(import.meta.glob('../pages/posts/wander/*.md', { eager: true }));
+  categoryPosts = sortPosts(posts);
+}
+
+// 找到当前文章在列表中的位置，用于上一篇/下一篇导航
+const currentIndex = categoryPosts.findIndex(post => post.url === currentPage);
+const nextPost = currentIndex > 0 ? categoryPosts[currentIndex - 1] : null;
+const prevPost = currentIndex < categoryPosts.length - 1 ? categoryPosts[currentIndex + 1] : null;
+---
+
+<html lang={currentLang}>
+  <head>
+    <HeadCommon />
+    <HeadSEO content={content} pageURL={currentUrl} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{SITE.title}{title}</title>
+    <style>
+      body {
+        width: 100%;
+        --gutter: 0.5rem;
+        --doc-padding: 2rem;
+      }
+
+      .layout {
+        display: grid;
+        grid-auto-flow: column;
+        grid-template-columns:
+          minmax(var(--gutter), 1fr) minmax(0, var(--max-width))
+          minmax(var(--gutter), 1fr);
+        overflow-x: hidden;
+      }
+
+      .heti h1.content-title:first-child {
+        margin-block-start: 8px !important;
+        margin-bottom: 16px;
+        letter-spacing: 0.02em;
+      }
+
+      .grid-sidebar {
+        height: 100vh;
+        position: sticky;
+        top: 0;
+        padding: 0;
+        margin-left: -5px;
+      }
+
+      #grid-left {
+        position: fixed;
+        background-color: var(--theme-bg);
+        z-index: 10;
+        display: none;
+      }
+
+      #grid-main {
+        padding: 0.8rem var(--gutter) 4rem var(--gutter);
+        grid-column: 2;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      #grid-right {
+        display: none;
+      }
+
+      @media (min-width: 50em) {
+        .layout {
+          overflow: initial;
+          grid-template-columns: 18rem minmax(0, var(--max-width));
+          gap: 0;
+        }
+
+        #grid-main {
+          padding: 0.8rem 2rem 4rem 2rem;
+        }
+
+        #grid-left {
+          display: flex;
+          padding-left: 2rem;
+          position: sticky;
+          grid-column: 1;
+        }
+      }
+
+      @media (min-width: 72em) {
+        .layout {
+          grid-template-columns: 20rem minmax(0, var(--max-width)) 13rem;
+          padding-left: 0;
+          padding-right: 0;
+          margin: 0 auto;
+        }
+
+        #grid-right {
+          grid-column: 3;
+          display: flex;
+          padding: 1rem;
+          height: 100vh;
+          position: sticky;
+          top: 0;
+        }
+      }
+
+      .gsc-left-header .color-text-secondary {
+        display: none;
+      }
+
+      .logo {
+        display: none;
+        margin-top: -0.1em;
+      }
+
+      @media (max-width: 50em) {
+        .logo {
+          display: block;
+          color: #fff;
+          margin-top: -0.1em;
+          margin-right: 0.2em;
+        }
+
+        .logo:active {
+          text-decoration: none;
+          border-block-end: none;
+          padding-block-end: unset;
+        }
+
+        #grid-main {
+          margin-top: -7px;
+          padding: 0.8rem 0.5rem var(--doc-padding) 0.5rem;
+        }
+
+        .heti h1.content-title:first-child {
+          margin-bottom: 12px;
+          font-size: 1.8rem;
+        }
+      }
+
+      .post-footer a {
+        color: var(--theme-accent);
+      }
+
+      .post-footer a:hover {
+        border-block-end: none;
+      }
+
+      .mobile-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
+
+      .mobile-nav-right {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      @media (min-width: 50em) {
+        .mobile-header {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="layout">
+      <aside id="grid-left" class="grid-sidebar" title="Site Navigation">
+        <LeftSidebar currentPage={currentPage} />
+      </aside>
+      <div id="grid-main">
+        <div
+          class="markdown-body heti md:mx-auto md:pb-20 pb-14 xl:max-w-7xl w-full lg:max-w-5xl md:max-w-2xl md:pl-3.5"
+          id="write"
+        >
+          <!-- 移动端搜索和logo -->
+          <div class="mobile-header">
+            <a class="logo inline-block md:hidden visible" href="/"
+              ><AstroLogo size={40} />
+            </a>
+            <div class="mobile-nav-right">
+              <Search />
+              <LanguageSwitcher currentPath={currentPage} />
+            </div>
+          </div>
+          
+          <slot />
+          <hr />
+          <div
+            class="flex justify-between md:flex-row flex-col mt-2 post-footer"
+          >
+            <div class="text-gray-800 dark:text-gray-200 flex-1">
+              {t('labels.publishDate', currentLang)}：<a
+                href={`https://github.com/${SITE.repo}/tree/main/src/pages${url}.md`}
+                target="_blank"
+                data-pagefind-sort="date"
+                title={t('labels.edit', currentLang)}>{date}</a
+              >
+            </div>
+            <div class="md:mt-0 mt-4 flex-1 text-right">
+              {nextPost ? <a href={nextPost.url}>{t('labels.nextPost', currentLang)}</a> : null}
+              {prevPost ? <a href={prevPost.url}>{t('labels.prevPost', currentLang)}</a> : null}
+            </div>
+          </div>
+        </div>
+        <script
+          is:inline
+          id="giscus-script"
+          src="https://giscus.app/client.js"
+          data-repo={SITE.repo}
+          data-repo-id="R_kgDOG4TsQA"
+          data-category="General"
+          data-category-id="DIC_kwDOG4TsQM4CR4bV"
+          data-mapping="title"
+          data-strict="0"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="https://gw.alipayobjects.com/os/k/hg/comment.css"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+      </div>
+    </main>
+    <Footer />
+    <script is:inline>
+      window.addEventListener("DOMContentLoaded", () => {
+        const images = document.querySelectorAll("#write img");
+        images.forEach((img, index) => {
+          if (index > 1) {
+            img.setAttribute("loading", "lazy");
+            img.setAttribute("decoding", "async");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

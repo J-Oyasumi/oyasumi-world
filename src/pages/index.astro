@@ -1,0 +1,297 @@
+---
+import HeadCommon from "../components/HeadCommon.astro";
+import HeadSEO from "../components/HeadSEO.astro";
+import Header from "../components/Header/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE } from "@/config";
+---
+
+<html lang="ch">
+  <head>
+    <HeadCommon />
+    <HeadSEO pageURL={SITE.homePage} content={{}} />
+    <title>{SITE.title}</title>
+    <style>
+      /* 自定义音乐播放器样式 */
+      .music-player {
+        position: relative;
+      }
+      
+      /* 隐藏原生音频控件 */
+      .music-player audio {
+        display: none;
+      }
+      
+      /* 播放按钮样式 */
+      .play-button {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #0454c4ff;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(100, 116, 139, 0.2);
+      }
+      
+      .play-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 3px 8px rgba(100, 116, 139, 0.3);
+      }
+      
+      .play-button:active {
+        transform: scale(0.95);
+      }
+      
+      .play-button svg {
+        width: 14px;
+        height: 14px;
+        fill: white;
+        transition: all 0.2s ease;
+      }
+      
+      /* 进度条样式 */
+      .progress-container {
+        height: 4px;
+        background: rgba(156, 163, 175, 0.3);
+        border-radius: 2px;
+        position: relative;
+        cursor: pointer;
+        margin: 0 4px;
+      }
+      
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #64748b, #94a3b8);
+        border-radius: 2px;
+        width: 0%;
+        transition: width 0.1s ease;
+      }
+      
+      .progress-container:hover .progress-bar {
+        height: 6px;
+        margin-top: -1px;
+      }
+      
+      /* 时间显示 */
+      .time-display {
+        font-size: 11px;
+        color: #6b7280;
+        min-width: 35px;
+        text-align: center;
+      }
+      
+      /* 深色模式适配 */
+      .dark .progress-container {
+        background: rgba(75, 85, 99, 0.5);
+      }
+      
+      .dark .time-display {
+        color: #9ca3af;
+      }
+    </style>
+  </head>
+
+  <body>
+    <Header />
+    <div
+      class="mx-auto mt-4 mb-12 xl:max-w-4xl w-full lg:max-w-3xl md:max-w-2xl max-w-xl md:box-border box-content md:px-8 sm:px-6 px-4"
+    >
+      <div class="mb-8 text-center">
+        <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-4">晚安世界</h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400">记录世界，分享技术、生活、思考与旅行</p>
+      </div>
+      
+      <div class="max-w-none text-gray-700 dark:text-gray-300">
+        <div class="mb-8">
+          <p class="text-lg mb-6 leading-relaxed">
+            你好哇！欢迎来到晚安世界！
+          </p>
+        </div>
+
+        <div class="mb-8">
+          <p class="text-lg mb-6 leading-relaxed">
+            晚安世界是一个个人博客，记录着我在不同时间、不同领域的学习、思考和体验。在这里，你可以找到：
+          </p>
+          
+          <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                📄 论文阅读
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                学术论文的阅读笔记，专注于Robot Learning领域
+              </p>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                💻 技术分享
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                分享有意思的新技术以及学术方面的思考
+              </p>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                🎬 观影感想
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                分享观看电影后的感受和思考
+              </p>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                📖 好书分享
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                分享读到的好书
+              </p>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                💭 随想杂谈
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                日常生活中的思考、感悟和杂记
+              </p>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                🌍 漫游时光
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                漫游在世界各地的有趣瞬间
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <p class="text-lg mb-6 leading-relaxed">
+            我最近爱听的歌：
+          </p>
+
+        <div class="mt-8 mx-auto max-w-lg">
+          <div class="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center space-x-4">
+              <div class="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
+                <img src="/assets/images/rainy-rainy-rainy-blues.JPG" 
+                     alt="rainy rainy rainy blues" 
+                     class="w-full h-full object-cover">
+              </div>
+              <div class="flex-1 min-w-0">
+                <h4 class="font-medium text-gray-800 dark:text-gray-200 text-sm truncate">rainy rainy rainy blues</h4>
+                <p class="text-xs text-gray-600 dark:text-gray-400">佐藤千亜妃</p>
+              </div>
+              
+              <div class="music-player flex-shrink-0">
+                <audio>
+                  <source src="/assets/music/rainy-rainy-rainy-blues.mp3" type="audio/mpeg">
+                  您的浏览器不支持音频播放
+                </audio>
+                
+                <div class="flex items-center space-x-2">
+                  <button class="play-button" id="playButton">
+                    <svg id="playIcon" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    <svg id="pauseIcon" viewBox="0 0 24 24" style="display: none;">
+                      <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                    </svg>
+                  </button>
+                  
+                  <div class="flex items-center space-x-1">
+                    <div class="time-display" id="currentTime">0:00</div>
+                    <div class="progress-container" id="progressContainer" style="width: 80px;">
+                      <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                    <div class="time-display" id="duration">0:00</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-12">
+          <p class="text-xl italic text-gray-600 dark:text-gray-400">
+            晚安，世界。明天见 🌙
+          </p>
+        </div>
+        
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const audio = document.querySelector('.music-player audio');
+            const playButton = document.getElementById('playButton');
+            const playIcon = document.getElementById('playIcon');
+            const pauseIcon = document.getElementById('pauseIcon');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const currentTimeEl = document.getElementById('currentTime');
+            const durationEl = document.getElementById('duration');
+            
+            let isPlaying = false;
+            
+            // 格式化时间
+            function formatTime(seconds) {
+              const mins = Math.floor(seconds / 60);
+              const secs = Math.floor(seconds % 60);
+              return `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+            
+            // 播放/暂停切换
+            playButton.addEventListener('click', function() {
+              if (isPlaying) {
+                audio.pause();
+              } else {
+                audio.play();
+              }
+            });
+            
+            // 音频事件监听
+            audio.addEventListener('play', function() {
+              isPlaying = true;
+              playIcon.style.display = 'none';
+              pauseIcon.style.display = 'block';
+            });
+            
+            audio.addEventListener('pause', function() {
+              isPlaying = false;
+              playIcon.style.display = 'block';
+              pauseIcon.style.display = 'none';
+            });
+            
+            audio.addEventListener('loadedmetadata', function() {
+              durationEl.textContent = formatTime(audio.duration);
+            });
+            
+            audio.addEventListener('timeupdate', function() {
+              const progress = (audio.currentTime / audio.duration) * 100;
+              progressBar.style.width = progress + '%';
+              currentTimeEl.textContent = formatTime(audio.currentTime);
+            });
+            
+            // 进度条点击跳转
+            progressContainer.addEventListener('click', function(e) {
+              const rect = progressContainer.getBoundingClientRect();
+              const clickX = e.clientX - rect.left;
+              const width = rect.width;
+              const clickRatio = clickX / width;
+              const newTime = clickRatio * audio.duration;
+              audio.currentTime = newTime;
+            });
+          });
+        </script>
+      </div>
+    </div>
+    <Footer />
+  </body>
+</html>

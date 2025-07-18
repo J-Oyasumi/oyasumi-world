@@ -1,0 +1,52 @@
+---
+interface Props {
+  currentPage: string;
+}
+
+const { currentPage } = Astro.props;
+import Search from "./Header/Search.astro";
+
+// 从URL确定当前板块
+const getCurrentCategory = (url: string) => {
+  if (url.includes('/posts/tech/')) return 'tech';
+  if (url.includes('/posts/life/')) return 'life';
+  if (url.includes('/posts/thoughts/')) return 'thoughts';
+  if (url.includes('/posts/travel/')) return 'travel';
+  return '';
+};
+
+const currentCategory = getCurrentCategory(currentPage);
+
+const categories = [
+  { key: 'tech', name: '技术', href: '/tech' },
+  { key: 'life', name: '生活', href: '/life' },
+  { key: 'thoughts', name: '思考', href: '/thoughts' },
+  { key: 'travel', name: '旅行', href: '/travel' }
+];
+---
+
+<div class="flex-grow text-right md:mr-1 -mr-2.5">
+  <Search />
+  {categories.map((category) => (
+    <a 
+      href={category.href}
+      class={`category-link ${category.key === currentCategory ? 'active' : ''}`}
+    >
+      {category.name}
+    </a>
+  ))}
+</div>
+
+<style>
+  .category-link {
+    text-decoration: none;
+    font-size: 1.1rem;
+    margin: 0.3rem 0 0 1rem;
+    font-weight: bold !important;
+    color: var(--theme-text) !important;
+  }
+
+  .category-link.active {
+    text-decoration: underline;
+  }
+</style>

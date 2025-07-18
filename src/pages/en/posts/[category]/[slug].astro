@@ -1,0 +1,43 @@
+---
+export async function getStaticPaths() {
+  const posts = await import.meta.glob('../**/*.md', { eager: true });
+  
+  return Object.entries(posts).map(([path, post]) => {
+    const pathParts = path.split('/');
+    const category = pathParts[pathParts.length - 2];
+    const fileName = pathParts[pathParts.length - 1];
+    const slug = fileName.replace('.md', '');
+    
+    return {
+      params: { category, slug },
+      props: { post }
+    };
+  });
+}
+
+const { post } = Astro.props;
+const { frontmatter, Content } = post;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{frontmatter.title}</title>
+    <meta name="description" content={frontmatter.description} />
+  </head>
+  <body>
+    <article>
+      <h1>{frontmatter.title}</h1>
+      <p class="text-gray-500 text-sm mb-4">
+        Published on {new Date(frontmatter.pubDate).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })}
+      </p>
+      <Content />
+    </article>
+  </body>
+</html>

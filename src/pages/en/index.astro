@@ -1,0 +1,138 @@
+---
+import HeadCommon from "../../components/HeadCommon.astro";
+import HeadSEO from "../../components/HeadSEO.astro";
+import Header from "../../components/Header/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { SITE } from "@/config";
+---
+
+<html lang="en">
+  <head>
+    <HeadCommon />
+    <HeadSEO pageURL={`${SITE.homePage}/en/`} content={{}} />
+    <title>{SITE.title} - English</title>
+  </head>
+
+  <body>
+    <Header />
+    <div
+      class="mx-auto mt-4 mb-12 xl:max-w-4xl w-full lg:max-w-3xl md:max-w-2xl max-w-xl md:box-border box-content md:px-8 sm:px-6 px-4"
+    >
+      <div class="mb-8 text-center">
+        <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-4">Oyasumi World</h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400">Recording the world, sharing technology, life, thoughts and travel</p>
+      </div>
+      
+      <div class="max-w-none text-gray-700 dark:text-gray-300">
+        <div class="mb-8">
+          <p class="text-lg mb-6 leading-relaxed">
+            Welcome to Oyasumi World! This is where I record the world and share bits and pieces of technology, life, thoughts, and travel.
+          </p>
+        </div>
+
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">What is this blog about?</h2>
+          <p class="mb-6 leading-relaxed">
+            Oyasumi World is a personal blog that documents my learning, thinking, and experiences across different fields. Here you can find:
+          </p>
+          
+          <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                📚 Book Notes
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Sharing thoughts on books I've read, including technical books and literature, recording insights and reflections.
+              </p>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                💻 Tech Sharing
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Recording the process of learning new technologies, sharing programming experiences, technical insights, and problem-solving approaches.
+              </p>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                🎬 Movie Reflections
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Sharing feelings and thoughts after watching movies, recording those moments that touch the soul.
+              </p>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                📖 Paper Reading
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Reading notes on academic papers, especially cutting-edge research in artificial intelligence and machine learning.
+              </p>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                🌍 Travel Records
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Recording experiences and insights from travels, sharing different cultures and landscapes.
+              </p>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                �‍♂️ Wander Time
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Interesting moments wandering around the world, discovering small joys and unexpected surprises in the streets and alleys.
+              </p>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                �💭 Random Thoughts
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Daily thoughts, feelings, and miscellaneous notes, recording beautiful moments in life.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">Why "Oyasumi World"?</h2>
+          <p class="mb-4 leading-relaxed">
+            The name "Oyasumi World" (Good Night World) carries my gentle farewell and expectation for this world. At the end of each day, we say good night to the world, but this is not an ending - it's for a better tomorrow.
+          </p>
+          <p class="mb-6 leading-relaxed">
+            In this fast-paced world, I hope this little corner can allow people to slow down, think quietly, and grow slowly.
+          </p>
+        </div>
+
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">Contact Me</h2>
+          <p class="mb-4 leading-relaxed">
+            If you have any thoughts or suggestions about my articles, feel free to contact me through:
+          </p>
+          <ul class="list-disc list-inside mb-6 space-y-2 text-gray-600 dark:text-gray-400">
+            <li>Leave comments below the articles</li>
+            <li>Find me on other social platforms</li>
+          </ul>
+          <p class="leading-relaxed">
+            Thank you for visiting, and I hope you can find valuable content here. May you have gains every day and sleep peacefully every night.
+          </p>
+        </div>
+
+        <div class="text-center mt-12">
+          <p class="text-xl italic text-gray-600 dark:text-gray-400">
+            Good night, world. See you tomorrow! 🌙
+          </p>
+        </div>
+      </div>
+    </div>
+    <Footer />
+  </body>
+</html>

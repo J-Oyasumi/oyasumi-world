@@ -1,0 +1,19 @@
+---
+import HeaderLink from "./HeaderLink.astro";
+import Search from "./Search.astro";
+import { detectLanguage, t } from "../../utils/i18n";
+
+const currentPath = Astro.url.pathname;
+const currentLang = detectLanguage(currentPath);
+const basePath = currentLang === 'en' ? '/en' : '';
+---
+
+<div class="flex-grow text-right md:mr-1 -mr-2.5">
+  <Search />
+  <HeaderLink href={`${basePath}/papers`}>{t('sections.papers', currentLang)}</HeaderLink>
+  <HeaderLink href={`${basePath}/tech`}>{t('sections.tech', currentLang)}</HeaderLink>
+  <HeaderLink href={`${basePath}/movies`}>{t('sections.movies', currentLang)}</HeaderLink>
+  <HeaderLink href={`${basePath}/books`}>{t('sections.books', currentLang)}</HeaderLink>
+  <HeaderLink href={`${basePath}/misc`}>{t('sections.misc', currentLang)}</HeaderLink>
+  <HeaderLink href={`${basePath}/wander`}>{t('sections.wander', currentLang)}</HeaderLink>
+</div>

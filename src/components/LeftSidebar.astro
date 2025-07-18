@@ -1,0 +1,272 @@
+---
+const { currentPage } = Astro.props;
+import AstroLogo from "./Header/AstroLogo.astro";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import { SITE } from "@/config";
+import { sortPosts } from "@/util";
+import { detectLanguage, getLocalizedContent } from "../utils/i18n";
+
+// 检测当前语言
+const currentLang = detectLanguage(currentPage);
+
+// 从URL确定当前板块并加载对应文章
+const getCurrentCategory = (url: string) => {
+  if (url.includes('/posts/papers/')) return 'papers';
+  if (url.includes('/posts/tech/')) return 'tech';
+  if (url.includes('/posts/movies/')) return 'movies';
+  if (url.includes('/posts/books/')) return 'books';
+  if (url.includes('/posts/misc/')) return 'misc';
+  if (url.includes('/posts/life/')) return 'life';
+  if (url.includes('/posts/thoughts/')) return 'thoughts';
+  if (url.includes('/posts/travel/')) return 'travel';
+  if (url.includes('/posts/wander/')) return 'wander';
+  return '';
+};
+
+const currentCategory = getCurrentCategory(currentPage);
+let categoryPosts = [];
+
+if (currentCategory === 'papers') {
+  const posts = Object.values(import.meta.glob('../pages/posts/papers/*.md', { eager: true }));
+  categoryPosts = sortPosts(posts);
+} else if (currentCategory === 'tech') {
+  const posts = Object.values(import.meta.glob('../pages/posts/tech/*.md', { eager: true }));
+  categoryPosts = sortPosts(posts);
+} else if (currentCategory === 'movies') {
+  const posts = Object.values(import.meta.glob('../pages/posts/movies/*.md', { eager: true }));
+  categoryPosts = sortPosts(posts);
+} else if (currentCategory === 'books') {
+  const posts = Object.values(import.meta.glob('../pages/posts/books/*.md', { eager: true }));
+  categoryPosts = sortPosts(posts);
+} else if (currentCategory === 'misc') {
+  const posts = Object.values(import.meta.glob('../pages/posts/misc/*.md', { eager: true }));
+  categoryPosts = sortPosts(posts);
+} else if (currentCategory === 'life') {
+  const posts = Object.values(import.meta.glob('../pages/posts/life/*.md', { eager: true }));
+  categoryPosts = sortPosts(posts);
+} else if (currentCategory === 'thoughts') {
+  const posts = Object.values(import.meta.glob('../pages/posts/thoughts/*.md', { eager: true }));
+  categoryPosts = sortPosts(posts);
+} else if (currentCategory === 'travel') {
+  const posts = Object.values(import.meta.glob('../pages/posts/travel/*.md', { eager: true }));
+  categoryPosts = sortPosts(posts);
+} else if (currentCategory === 'wander') {
+  const posts = Object.values(import.meta.glob('../pages/posts/wander/*.md', { eager: true }));
+  categoryPosts = sortPosts(posts);
+}
+
+let currentPageMatch = currentPage.slice(1).replace(/\/$/, "");
+
+const sidebarSections = categoryPosts.reduce((sections, post, index) => {
+  // 获取本地化的标题
+  const localizedContent = getLocalizedContent(post.frontmatter, currentLang);
+  
+  const route = {
+    title: localizedContent.title,
+    link: post.url.slice(1),
+  };
+  if (index === 0) {
+    sections.push({ text: "", children: [] });
+  }
+  sections[sections.length - 1].children.push(route);
+  return sections;
+}, []);
+---
+
+<nav aria-labelledby="grid-left" class="pt-6 text-gray-800 dark:text-gray-200">
+  <div class="logo flex">
+    <a href="/" class="logo-image" data-astro-prefetch>
+      <AstroLogo size={40} />
+    </a>
+    <a href="/" data-astro-prefetch>
+      <h1 class="text-gray-800 dark:text-gray-200">{SITE.title}</h1>
+    </a>
+    <div class="ml-3 flex items-center">
+      <LanguageSwitcher currentPath={currentPage} />
+    </div>
+  </div>
+  <ul class="nav-groups">
+    {
+      sidebarSections.map((section) => (
+        <li>
+          <div class="nav-group">
+            <ul>
+              {section.children.map((child) => (
+                <li class="nav-link">
+                  <a
+                    data-astro-prefetch
+                    href={`/${child.link}`}
+                    aria-current={`${decodeURIComponent(currentPageMatch) === child.link ? "page" : "false"}`}
+                  >
+                    {child.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .logo {
+    align-items: center;
+  }
+</style>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const navGroups = document.querySelector(".nav-groups");
+
+    if (!navGroups) return;
+
+    const savedScrollPosition = localStorage.getItem("sidebarScrollPosition");
+    if (savedScrollPosition !== null) {
+      navGroups.scrollTop = parseInt(savedScrollPosition, 10);
+    } else {
+      const target = document.querySelector('[aria-current="page"]');
+      if (target && target.offsetTop > window.innerHeight - 100) {
+        navGroups.scrollTop = target.offsetTop - 86;
+      }
+    }
+
+    navGroups.style.visibility = "visible";
+
+    localStorage.removeItem("sidebarScrollPosition");
+
+    navGroups.addEventListener("click", (event) => {
+      const link = event.target.closest("a");
+      if (link) {
+        const scrollPosition = navGroups.scrollTop;
+        localStorage.setItem("sidebarScrollPosition", scrollPosition);
+      }
+    });
+  });
+</script>
+
+<style>
+  nav {
+    width: 100%;
+    margin-right: 1rem;
+  }
+
+  .category-header {
+    padding: 1rem 0 0.5rem 0;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--theme-accent);
+  }
+
+  .category-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--theme-text);
+    margin: 0;
+  }
+
+  .no-articles {
+    padding: 1rem 0;
+    text-align: center;
+  }
+
+  .no-articles p {
+    color: var(--theme-text-light);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .nav-groups {
+    height: 100%;
+    padding: 2rem 0;
+    overflow-x: visible;
+    overflow-y: auto;
+    max-height: 100vh;
+    visibility: hidden;
+  }
+
+  .nav-groups > li + li {
+    margin-top: 2rem;
+  }
+
+  .nav-groups > :first-child {
+    padding-top: 0;
+  }
+
+  .nav-groups > :last-child {
+    padding-bottom: 2rem;
+    margin-bottom: var(--theme-navbar-height);
+  }
+
+  .nav-group-title {
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0rem 1rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    margin-top: -0.5rem;
+  }
+
+  .nav-link a {
+    font-size: 1.08rem;
+    margin: 1px;
+    padding: 0.3rem 0.7rem;
+    color: inherit;
+    text-decoration: none;
+    display: block;
+  }
+  .nav-link a:hover,
+  .nav-link a:focus {
+    color: var(--theme-accent);
+  }
+
+  .nav-link a[aria-current="page"] {
+    color: var(--theme-accent);
+    font-weight: bolder;
+  }
+
+  @media (min-width: 50em) {
+    .nav-groups {
+      padding: 0;
+      margin-top: 0.7em;
+    }
+  }
+  .logo {
+    display: flex;
+    overflow: hidden;
+    font-size: 2rem;
+    font-weight: bolder;
+    flex-shrink: 0;
+    font-weight: 600;
+    line-height: 1;
+    gap: 0.25em;
+    padding: 0.25em 0;
+  }
+
+  .logo a {
+    padding: 0.5em 0.25em;
+    margin: -0.5em -0.25em;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+  }
+
+  .logo .logo-image {
+    margin-top: -0.6em;
+  }
+
+  .logo a {
+    transition: color 100ms ease-out;
+    color: var(--theme-text);
+  }
+
+  .logo a:hover,
+  .logo a:focus {
+    color: var(--theme-accent);
+  }
+
+  .logo h1 {
+    font: inherit;
+    margin: 0;
+  }
+</style>

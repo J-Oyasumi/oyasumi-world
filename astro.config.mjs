@@ -7,6 +7,10 @@ import { parse } from "node-html-parser";
 import rehypeCustomizeImageSrc from "./rehype-customize-image-src.js";
 import { SITE } from "./src/config";
 
+// 数学公式渲染支持
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
+
 const DEFAULT_FORMAT = "YYYY/MM/DD";
 
 function formatDate(date) {
@@ -51,7 +55,7 @@ export default defineConfig({
   prefetch: true,
   integrations: [tailwind()],
   markdown: {
-    remarkPlugins: [defaultLayoutPlugin],
-    rehypePlugins: [rehypeCustomizeImageSrc],
+    remarkPlugins: [defaultLayoutPlugin, remarkMath],
+    rehypePlugins: [rehypeCustomizeImageSrc, rehypeKatex],
   },
 });
